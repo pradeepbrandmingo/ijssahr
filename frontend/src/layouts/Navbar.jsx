@@ -88,7 +88,7 @@ const Navbar = () => {
 
   return (
     <header
-      className="w-full bg-white sticky top-0 z-50 transition-shadow duration-300 relative"
+      className="w-full bg-white sticky top-0 z-50 transition-shadow duration-300"
       style={{
         fontFamily: "var(--font-primary)",
         boxShadow: isScrolled

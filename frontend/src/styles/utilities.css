@@ -1,61 +1,64 @@
-/* ===========================
-Container
-=========================== */
-
-.container {
-  max-width: var(--container-width);
-
-  margin: auto;
-
-  padding-inline: 20px;
+@layer components {
+  /* ===========================
+  Container
+  =========================== */
+  
+  .container {
+    max-width: var(--container-width);
+    margin: auto;
+    padding-inline: 20px;
+  }
+  
+  /* ===========================
+  Section
+  =========================== */
+  
+  .section {
+    padding: 80px 0;
+  }
+  
+  /* ===========================
+  Card
+  =========================== */
+  
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius-md); /* Fixed var(--radius) which is not defined in variables.css */
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+  }
+  
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  
+  /* ===========================
+  Image
+  =========================== */
+  
+  .img-fluid {
+    width: 100%;
+    display: block;
+  }
+  
+  /* ===========================
+  Button Reset
+  =========================== */
+  
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: var(--font-primary);
+  }
 }
 
-/* ===========================
-Section
-=========================== */
-
-.section {
-  padding: 80px 0;
-}
-
-/* ===========================
-Card
-=========================== */
-
-.card {
-  background: var(--card-bg);
-
-  border-radius: var(--radius);
-
-  box-shadow: var(--shadow-sm);
-
-  transition: var(--transition);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-/* ===========================
-Image
-=========================== */
-
-.img-fluid {
-  width: 100%;
-
-  display: block;
-}
-
-/* ===========================
-Button Reset
-=========================== */
-
-button {
-  border: none;
-
-  outline: none;
-
-  cursor: pointer;
-
-  font-family: var(--font-primary);
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

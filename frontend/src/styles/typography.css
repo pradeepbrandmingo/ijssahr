@@ -1,111 +1,87 @@
-/* ===========================
-   Body
-=========================== */
-
-body {
-  font-family: var(--font-primary);
-
-  font-size: 16px;
-
-  font-weight: 400;
-
-  color: var(--text);
-
-  line-height: 1.8;
-}
-
-/* ===========================
-   Heading
-=========================== */
-
-h1 {
-  font-size: 48px;
-
-  font-weight: 700;
-
-  line-height: 1.2;
-
-  color: var(--heading);
-}
-
-h2 {
-  font-size: 38px;
-
-  font-weight: 700;
-
-  line-height: 1.3;
-
-  color: var(--heading);
-}
-
-h3 {
-  font-size: 30px;
-
-  font-weight: 600;
-
-  line-height: 1.4;
-
-  color: var(--heading);
-}
-
-h4 {
-  font-size: 24px;
-
-  font-weight: 600;
-
-  line-height: 1.5;
-
-  color: var(--heading);
-}
-
-h5 {
-  font-size: 20px;
-
-  font-weight: 600;
-
-  line-height: 1.5;
-
-  color: var(--heading);
-}
-
-h6 {
-  font-size: 18px;
-
-  font-weight: 600;
-
-  line-height: 1.5;
-
-  color: var(--heading);
-}
-
-/* ===========================
-Paragraph
-=========================== */
-
-p {
-  font-size: 16px;
-
-  font-weight: 400;
-
-  color: var(--text);
-
-  line-height: 1.8;
-}
-
-/* ===========================
-Links
-=========================== */
-
-a {
-  text-decoration: none;
-
-  color: inherit;
-}
-
-/* ===========================
-List
-=========================== */
-
-li {
-  list-style: none;
+@layer base {
+  /* ===========================
+     Body
+  =========================== */
+  
+  body {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  
+  /* ===========================
+     Heading
+  =========================== */
+  
+  h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--heading);
+  }
+  
+  h2 {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--heading);
+  }
+  
+  h3 {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--heading);
+  }
+  
+  h4 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--heading);
+  }
+  
+  h5 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--heading);
+  }
+  
+  h6 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--heading);
+  }
+  
+  /* ===========================
+  Paragraph
+  =========================== */
+  
+  p {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  
+  /* ===========================
+  Links
+  =========================== */
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* ===========================
+  List
+  =========================== */
+  
+  li {
+    list-style: none;
+  }
 }

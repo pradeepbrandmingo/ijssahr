@@ -1,17 +1,17 @@
-.fade-up {
-  animation: fadeUp 0.5s ease;
+@layer utilities {
+  .fade-up {
+    animation: fadeUp 0.5s ease;
+  }
 }
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-
     transform: translateY(25px);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0);
   }
 }
