@@ -1,0 +1,46 @@
+@import "./variables.css";
+@import "./typography.css";
+@import "./utilities.css";
+@import "./animations.css";
+
+@import "tailwindcss";
+
+/* ===========================
+Reset
+=========================== */
+
+* {
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+
+  display: block;
+}
+
+button,
+input,
+textarea {
+  font-family: var(--font-primary);
+}
+
+::selection {
+  background: var(--primary);
+
+  color: white;
+}
