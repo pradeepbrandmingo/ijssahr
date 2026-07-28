@@ -5,42 +5,42 @@
 
 @import "tailwindcss";
 
-/* ===========================
-Reset
-=========================== */
+@layer base {
+  /* ===========================
+  Reset
+  =========================== */
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    overflow-x: hidden;
+  }
 
-* {
-  margin: 0;
-
-  padding: 0;
-
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--background);
-
-  overflow-x: hidden;
-}
-
-img {
-  max-width: 100%;
-
-  display: block;
-}
-
-button,
-input,
-textarea {
-  font-family: var(--font-primary);
-}
-
-::selection {
-  background: var(--primary);
-
-  color: white;
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background: var(--background);
+  }
+  
+  img {
+    max-width: 100%;
+    display: block;
+  }
+  
+  button,
+  input,
+  textarea {
+    font-family: var(--font-primary);
+  }
+  
+  ::selection {
+    background: var(--primary);
+    color: white;
+  }
 }
