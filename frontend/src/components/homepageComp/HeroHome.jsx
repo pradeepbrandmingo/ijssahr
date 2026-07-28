@@ -42,37 +42,37 @@ const HeroHome = () => {
         </div>
 
         {/* Right Content (Stats/Features) */}
-        <div className="flex-1 min-w-0 lg:min-w-[300px] flex flex-row items-start lg:items-center justify-between lg:justify-end gap-1 sm:gap-4 lg:gap-6 pt-4 lg:pt-0 w-full">
+        <div className="flex-1 min-w-0 lg:min-w-auto flex flex-row items-start lg:items-center justify-between lg:justify-end gap-2 sm:gap-4 lg:gap-6 pt-4 lg:pt-0 w-full">
            
            {/* Stat 1 */}
            <div className="flex flex-col items-center text-center px-1 flex-1 min-w-0">
-              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl mb-2 shadow-md bg-[var(--primary)]">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl mb-2 shadow-md bg-[var(--primary)] shrink-0">
                  <BsPeople className="text-sm sm:text-lg text-white" />
               </div>
-              <h3 className="font-bold tracking-wide text-white text-[12px] sm:text-[15px] md:text-[16px] mb-0.5 truncate w-full">2026</h3>
-              <p className="font-medium text-white/60 text-[9px] sm:text-[10px] m-0 leading-tight">Starting Year</p>
+              <h3 className="font-bold tracking-wide text-white text-[12px] sm:text-[14px] md:text-[15px] lg:text-[16px] mb-0.5 whitespace-nowrap">2026</h3>
+              <p className="font-medium text-white/60 text-[9px] sm:text-[10px] md:text-[11px] m-0 leading-tight whitespace-nowrap">Starting Year</p>
            </div>
 
            <div className="hidden lg:block w-px h-[40px] bg-white/15"></div>
 
            {/* Stat 2 */}
            <div className="flex flex-col items-center text-center px-1 flex-1 min-w-0">
-              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl mb-2 shadow-md bg-[var(--primary)]">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl mb-2 shadow-md bg-[var(--primary)] shrink-0">
                  <HiOutlineDocumentText className="text-sm sm:text-lg text-white" />
               </div>
-              <h3 className="font-bold tracking-wide text-white text-[12px] sm:text-[15px] md:text-[16px] mb-0.5 truncate w-full">Bimonthly</h3>
-              <p className="font-medium text-white/60 text-[9px] sm:text-[10px] m-0 leading-tight break-words">Publication<br className="block sm:hidden" /> Frequency</p>
+              <h3 className="font-bold tracking-wide text-white text-[12px] sm:text-[14px] md:text-[15px] lg:text-[16px] mb-0.5 whitespace-nowrap">Bimonthly</h3>
+              <p className="font-medium text-white/60 text-[9px] sm:text-[10px] md:text-[11px] m-0 leading-tight whitespace-nowrap">Publication Frequency</p>
            </div>
 
            <div className="hidden lg:block w-px h-[40px] bg-white/15"></div>
 
            {/* Stat 3 */}
            <div className="flex flex-col items-center text-center px-1 flex-1 min-w-0">
-              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl mb-2 shadow-md bg-[var(--primary)]">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl mb-2 shadow-md bg-[var(--primary)] shrink-0">
                  <FiGlobe className="text-sm sm:text-lg text-white" />
               </div>
-              <h3 className="font-bold tracking-wide text-white text-[12px] sm:text-[15px] md:text-[16px] mb-0.5 truncate w-full">Open Access</h3>
-              <p className="font-medium text-white/60 text-[9px] sm:text-[10px] m-0 leading-tight">Global Reach</p>
+              <h3 className="font-bold tracking-wide text-white text-[12px] sm:text-[14px] md:text-[15px] lg:text-[16px] mb-0.5 whitespace-nowrap">Open Access</h3>
+              <p className="font-medium text-white/60 text-[9px] sm:text-[10px] md:text-[11px] m-0 leading-tight whitespace-nowrap">Global Reach</p>
            </div>
            
         </div>
