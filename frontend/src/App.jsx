@@ -1,11 +1,7 @@
-import React from "react";
+import AppRoutes from "./routes/AppRoutes";
 
 const App = () => {
-  return (
-    <div>
-      <h1 class="text-3xl font-bold text-orange-400 text-center ">Jay shree ram </h1>
-    </div>
-  );
+  return <AppRoutes />;
 };
 
 export default App;
