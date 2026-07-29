@@ -5,7 +5,7 @@ import { FiSearch, FiMenu, FiX } from "react-icons/fi";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { AiOutlineHome } from "react-icons/ai";
 import { BsPeople } from "react-icons/bs";
-import Logo from "../images/ijssahr-logo.png";
+import Logo from "../assets/images/ijssahr-logo.png";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -80,7 +80,7 @@ const Navbar = () => {
       icon: <AiOutlineHome style={{ fontSize: "18px" }} />,
     },
     {
-      path: "/about-us",
+      path: "/about",
       label: "About Us",
       icon: <BsPeople style={{ fontSize: "18px" }} />,
     },

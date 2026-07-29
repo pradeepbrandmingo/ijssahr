@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import ArchiveContent from '../../components/archivepageComp/ArchiveContent';
 
 const Archive = () => {
   return (
-    <div>Archive</div>
-  )
-}
+    <div className="w-full">
+      <ArchiveContent />
+    </div>
+  );
+};
 
-export default Archive
+export default Archive;
