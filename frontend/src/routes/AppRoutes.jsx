@@ -33,10 +33,10 @@ const AppRoutes = () => {
 
         <div className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-[1280px]">
           <div className="flex flex-col md:flex-row gap-6 lg:gap-8 items-start">
-            <aside className="w-full md:w-[260px] lg:w-[280px] shrink-0 md:sticky md:top-[185px] lg:top-[205px] z-30 md:max-h-[calc(100vh-225px)] overflow-y-auto no-scrollbar rounded-2xl">
+            <aside className="w-full md:w-[260px] lg:w-[280px] shrink-0 md:sticky md:top-[185px] lg:top-[205px] z-30 md:max-h-[calc(100vh-225px)] overflow-y-auto custom-scrollbar rounded-2xl pr-1 pb-4">
               <Sidebar />
             </aside>
-            <main className="flex-1 min-w-0">
+            <main className="flex-1 min-w-0 w-full max-w-full">
               <Suspense
                 fallback={
                   <div className="flex items-center justify-center h-64">
