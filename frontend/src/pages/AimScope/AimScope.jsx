@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import AimScopeContent from '../../components/aimscopepageComp/AimScopeContent';
 
 const AimScope = () => {
   return (
-    <div>AimScope</div>
-  )
-}
+    <div>
+      <AimScopeContent />
+    </div>
+  );
+};
 
-export default AimScope
+export default AimScope;

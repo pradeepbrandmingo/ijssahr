@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import PaymentContent from '../../components/paymentpageComp/PaymentContent';
 
 const Payment = () => {
   return (
-    <div>Payment</div>
-  )
-}
+    <div>
+      <PaymentContent />
+    </div>
+  );
+};
 
-export default Payment
+export default Payment;

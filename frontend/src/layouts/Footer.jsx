@@ -2,35 +2,20 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer
-      className="w-full mt-auto"
-      style={{
-        backgroundColor: "var(--primary-dark)",
-        paddingTop: "30px",
-        paddingBottom: "10px",
-      }}
-    >
-      <div className="container mx-auto px-5 sm:px-6 flex flex-col items-center justify-center">
-        <div
-          className="w-full max-w-6xl mx-auto text-center flex flex-col items-center"
-          style={{ gap: "16px" }}
-        >
-          <p
-            className="text-[12.5px] md:text-[13.5px] font-medium tracking-wider"
-            style={{ color: "rgba(255, 255, 255, 0.7)" }}
-          >
+    <footer className="w-full mt-auto bg-[#070b28] text-white py-5 md:py-7 border-t border-slate-800/40">
+      <div className="container mx-auto px-4 sm:px-6 flex flex-col items-center justify-center">
+        <div className="w-full max-w-6xl mx-auto text-center flex flex-col items-center gap-2.5 sm:gap-3">
+          
+          {/* Copyright */}
+          <p className="text-xs sm:text-sm font-semibold tracking-wide text-white">
             © 2026 IJSSAHR All Rights Reserved
           </p>
 
-          <p
-            className="text-[12px] md:text-[13px] leading-relaxed w-full max-w-[98%] md:max-w-full"
-            style={{ color: "rgba(255, 255, 255, 0.9)" }}
-          >
-            Privacy Statement: The names and email addresses entered in this
-            journal site will be used exclusively for the stated purposes of
-            this Publication and will not be made available for any other
-            purpose or to any other party.
+          {/* Privacy Statement - Bright high-contrast text sitting in 2 clean lines */}
+          <p className="text-xs sm:text-[13px] leading-relaxed text-slate-200 max-w-5xl font-normal">
+            <span className="font-bold text-white">Privacy Statement:</span> The names and email addresses entered in this journal site will be used exclusively for the stated purposes of this Publication and will not be made available for any other purpose or to any other party.
           </p>
+
         </div>
       </div>
     </footer>

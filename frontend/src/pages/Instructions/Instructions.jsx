@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import InstructionsContent from '../../components/InstructionpageComp/InstructionsContent';
 
 const Instructions = () => {
   return (
-    <div>Instructions</div>
-  )
-}
+    <div>
+      <InstructionsContent />
+    </div>
+  );
+};
 
-export default Instructions
+export default Instructions;

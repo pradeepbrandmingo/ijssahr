@@ -1,9 +1,12 @@
-import React from 'react'
+import EditorialBoardContent from '../../components/editorialboardpageComp/EditorialBoardContent';
+
 
 const EditorialBoard = () => {
   return (
-    <div>EditorialBoard</div>
-  )
-}
+    <div>
+      <EditorialBoardContent />
+    </div>
+  );
+};
 
-export default EditorialBoard
+export default EditorialBoard;
