@@ -12,11 +12,18 @@ import {
 import { BsPeople } from "react-icons/bs";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { FiChevronDown, FiChevronUp, FiList } from "react-icons/fi";
+import fallbackCopyrightPdf from "../assets/images/Copyright-form IJSSAHR.pdf";
 
 const Sidebar = () => {
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isIndexingOpen, setIsIndexingOpen] = useState(false);
+
+  // Backend ready configuration for dynamic document URLs
+  // Replace fallbackCopyrightPdf with backend API URL (e.g. response.data.copyrightPdfUrl) when backend is connected
+  const [sidebarData, setSidebarData] = useState({
+    copyrightPdfUrl: fallbackCopyrightPdf,
+  });
 
   const menuItems = [
     {
@@ -54,6 +61,8 @@ const Sidebar = () => {
       path: "/copyright",
       label: "Copyright Form",
       icon: <BiCopyright className="text-[20px]" />,
+      isExternal: true,
+      externalUrl: sidebarData.copyrightPdfUrl,
     },
     {
       path: "/contact",
@@ -104,6 +113,45 @@ const Sidebar = () => {
             location.pathname === item.path ||
             (location.pathname === "/" && item.path === "/current-issue");
           const isLast = index === menuItems.length - 1;
+
+          if (item.isExternal) {
+            return (
+              <a
+                key={item.label}
+                href={item.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMobileOpen(false)}
+                className={`flex items-center gap-3.5 px-5 py-3.5 transition-all duration-150 border-l-4 ${
+                  isLast ? "" : "border-b border-slate-100"
+                }`}
+                style={{
+                  borderLeftColor: "transparent",
+                  backgroundColor: "transparent",
+                  color: "var(--heading)",
+                  fontWeight: "500",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#f8fafc";
+                  e.currentTarget.style.color = "var(--primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "var(--heading)";
+                }}
+              >
+                <div
+                  className="flex items-center justify-center shrink-0"
+                  style={{ color: "var(--text-light)" }}
+                >
+                  {item.icon}
+                </div>
+                <span className="text-[14px] md:text-[14.5px] leading-snug font-medium">
+                  {item.label}
+                </span>
+              </a>
+            );
+          }
 
           return (
             <Link

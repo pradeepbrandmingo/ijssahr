@@ -11,14 +11,20 @@ const Home = lazy(() => import("../pages/Home/Home"));
 const About = lazy(() => import("../pages/About/About"));
 const CurrentIssue = lazy(() => import("../pages/CurrentIssue/CurrentIssue"));
 const Archive = lazy(() => import("../pages/Archive/Archive"));
+const ArchiveIssueDetails = lazy(() => import("../pages/Archive/ArchiveIssueDetails"));
 const EditorialBoard = lazy(
   () => import("../pages/EditorialBoard/EditorialBoard"),
+);
+const EditorialBoardRecruitment = lazy(
+  () => import("../pages/EditorialBoardRecruitment/EditorialBoardRecruitment"),
+);
+const EditorialBoardRoles = lazy(
+  () => import("../pages/EditorialBoardRoles/EditorialBoardRoles"),
 );
 const Instructions = lazy(() => import("../pages/Instructions/Instructions"));
 const AimScope = lazy(() => import("../pages/AimScope/AimScope"));
 const Payment = lazy(() => import("../pages/Payment/Payment"));
 const Indexing = lazy(() => import("../pages/Indexing/Indexing"));
-const Copyright = lazy(() => import("../pages/Copyright/Copyright"));
 const Contact = lazy(() => import("../pages/Contact/Contact"));
 const Search = lazy(() => import("../pages/Search/Search"));
 const ArticleDetails = lazy(
@@ -49,12 +55,20 @@ const AppRoutes = () => {
                   <Route path="/about" element={<About />} />
                   <Route path="/current-issue" element={<CurrentIssue />} />
                   <Route path="/archive" element={<Archive />} />
+                  <Route path="/archive/:issueId" element={<ArchiveIssueDetails />} />
                   <Route path="/editorial-board" element={<EditorialBoard />} />
+                  <Route
+                    path="/editorialboardrecruitment"
+                    element={<EditorialBoardRecruitment />}
+                  />
+                  <Route
+                    path="/editorialboardroles"
+                    element={<EditorialBoardRoles />}
+                  />
                   <Route path="/instructions" element={<Instructions />} />
                   <Route path="/aim-scope" element={<AimScope />} />
                   <Route path="/payment" element={<Payment />} />
                   <Route path="/indexing" element={<Indexing />} />
-                  <Route path="/copyright" element={<Copyright />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/article/:slug" element={<ArticleDetails />} />
