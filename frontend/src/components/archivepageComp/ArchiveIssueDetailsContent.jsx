@@ -1,97 +1,32 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { BsFileEarmarkText } from 'react-icons/bs';
-import { FaRegFilePdf } from 'react-icons/fa6';
-import { BiCalendar, BiBookOpen } from 'react-icons/bi';
-import { FiArrowLeft } from 'react-icons/fi';
-import dummyPdf from '../../assets/IJSSAHR_012.pdf';
-
-// Dummy database of past archived issues (Backend API response mockup)
-const archiveIssuesData = {
-  "vol-01-iss-03": {
-    id: "vol-01-iss-03",
-    volume: "Volume 01",
-    issue: "Issue 03",
-    date: "May–Jun 2026",
-    fullTitle: "Volume 1, Issue 3, May–Jun 2026",
-    articles: [
-      {
-        id: 1,
-        title: "Hans Sachs and the Birth of Poetic Self-awareness: Autobiography, Criticism, and a Paradigm Shift in Literature",
-        authors: "Albrecht Classen, USA",
-        pages: "1-13",
-        pdfLink: dummyPdf,
-        abstract: "This paper explores the literary transformation and poetic self-awareness of Hans Sachs through autobiographical analysis and Renaissance criticism."
-      },
-      {
-        id: 2,
-        title: "SOS to Ghana's and ECOWAS' Parliaments for the Promulgation of Victims Protection Act",
-        authors: "Ishmael D. Norman, Ghana",
-        pages: "14-23",
-        pdfLink: dummyPdf,
-        abstract: "An urgent legislative evaluation and policy proposal advocating for victim protection frameworks in West Africa."
-      },
-      {
-        id: 3,
-        title: "The Phenomenon of Poverty and the Ethics of Help by the Rich Countries",
-        authors: "Robert Wadri Aluma, Uganda",
-        pages: "24-40",
-        pdfLink: dummyPdf,
-        abstract: "A critical examination of international aid, ethical obligations, and poverty alleviation strategies across developing nations."
-      }
-    ]
-  },
-  "vol-01-iss-02": {
-    id: "vol-01-iss-02",
-    volume: "Volume 01",
-    issue: "Issue 02",
-    date: "Mar–Apr 2026",
-    fullTitle: "Volume 1, Issue 2, Mar–Apr 2026",
-    articles: [
-      {
-        id: 4,
-        title: "Algorithmic Composition: Artificial Intelligence and Generative Methods in Music",
-        authors: "Belikova Viktoriia, USA",
-        pages: "41-46",
-        pdfLink: dummyPdf,
-        abstract: "Investigation into AI-generated musical compositions and the evolution of algorithmic sound synthesis in modern arts."
-      },
-      {
-        id: 5,
-        title: "Puro Veneno Wall Posters, Colombia, South America, 2018 to Present",
-        authors: "R.G. Wakeland, USA",
-        pages: "47-60",
-        pdfLink: dummyPdf,
-        abstract: "A visual cultural analysis of political street art and public wall posters in post-conflict Colombia."
-      }
-    ]
-  },
-  "vol-01-iss-01": {
-    id: "vol-01-iss-01",
-    volume: "Volume 01",
-    issue: "Issue 01",
-    date: "Jan–Feb 2026",
-    fullTitle: "Volume 1, Issue 1, Jan–Feb 2026",
-    articles: [
-      {
-        id: 6,
-        title: "Tracing the Concept of Mission in Public Organizations",
-        authors: "Dr. Mike Potter, USA",
-        pages: "61-71",
-        pdfLink: dummyPdf,
-        abstract: "An organizational theory paper examining public service orientation, mission statements, and administrative efficacy."
-      }
-    ]
-  }
-};
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { BsFileEarmarkPdf } from "react-icons/bs";
+import { VscFilePdf } from "react-icons/vsc";
+import { FaRegFilePdf, FaExternalLinkAlt } from "react-icons/fa";
+import { BiCalendar } from "react-icons/bi";
+import { FiArrowLeft } from "react-icons/fi";
+import API from "../../services/api";
+import { formatFileUrl } from "../../utils/fileUrl";
 
 const ArchiveIssueDetailsContent = () => {
   const { issueId } = useParams();
   const navigate = useNavigate();
+
+  const [issueData, setIssueData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
 
-  // Get selected issue data (or fallback to first issue)
-  const currentIssueData = archiveIssuesData[issueId] || archiveIssuesData["vol-01-iss-03"];
+  useEffect(() => {
+    setLoading(true);
+    API.get(`/issues/${issueId}`)
+      .then((res) => {
+        setIssueData(res.data?.data || null);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch issue details:", err);
+      })
+      .finally(() => setLoading(false));
+  }, [issueId]);
 
   const toggleExpand = (id) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -99,115 +34,193 @@ const ArchiveIssueDetailsContent = () => {
 
   const handlePdfClick = (e, link) => {
     e.stopPropagation();
-    window.open(link, "_blank", "noopener,noreferrer");
+    if (!link || link === "#") return;
+    window.open(formatFileUrl(link), "_blank", "noopener,noreferrer");
   };
 
-  return (
-    <div className="w-full space-y-5 animate-fade-in">
-      {/* Back Button & Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 sm:px-6 rounded-xl border border-slate-100 shadow-sm">
+  const articles = issueData?.articles || [];
+
+  if (loading) {
+    return (
+      <div className="w-full bg-white p-4 rounded-md border border-slate-100 text-center text-slate-400 text-xs font-normal animate-pulse">
+        Loading archived issue publications...
+      </div>
+    );
+  }
+
+  if (!issueData) {
+    return (
+      <div className="w-full bg-white p-8 rounded-md border border-slate-100 text-center">
+        <p className="text-slate-600 text-xs font-medium mb-3">Archived issue record not found.</p>
         <button
-          onClick={() => navigate('/archive')}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#0d6efd] hover:text-[#0b1340] transition-colors w-fit"
+          onClick={() => navigate("/archive")}
+          className="px-3 py-1.5 bg-blue-600 text-white rounded font-bold text-xs"
         >
-          <FiArrowLeft className="w-4 h-4" />
+          Back to Archive
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full animate-fade-in space-y-3">
+      {/* Back Button */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => navigate("/archive")}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0d6efd] hover:text-[#0b1340] transition-colors cursor-pointer"
+        >
+          <FiArrowLeft className="text-sm" />
           <span>Back to Archive</span>
         </button>
+      </div>
 
-        <div className="flex items-center gap-2 text-slate-500 text-xs sm:text-sm">
-          <BiCalendar className="text-[#0d6efd] w-4 h-4" />
-          <span className="font-medium text-slate-700">{currentIssueData.date}</span>
+      {/* Compact Archived Issue Banner */}
+      <div className="relative bg-[#0b1340] text-white rounded-lg p-3 sm:px-4 md:px-5 md:py-3.5 overflow-hidden shadow-2xs flex flex-col md:flex-row items-center justify-between gap-2">
+        <div className="relative z-10 flex-1">
+          <span className="inline-block text-[#38b6ff] font-semibold tracking-wider text-[9px] uppercase mb-0.5">
+            ARCHIVED PUBLICATION
+          </span>
+          <h1 className="text-[13px] sm:text-[14px] md:text-[16px] font-semibold text-white mb-1">
+            {issueData.volume}, {issueData.issue} ({issueData.period || "2026"})
+          </h1>
+          <div className="flex items-center gap-1.5 text-slate-300 text-[10px] font-normal">
+            <BiCalendar className="text-xs" />
+            <span>Published Issue</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Issue Container */}
-      <div className="w-full bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-slate-100 overflow-hidden">
-        
-        {/* Issue Banner Header */}
-        <div className="bg-[#f8fafc] p-4 sm:px-6 border-b border-slate-200 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#e0edff] text-[#0d6efd] flex items-center justify-center">
-              <BiBookOpen className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#0b1340]">
-                {currentIssueData.fullTitle}
-              </h2>
-              <p className="text-xs text-slate-500 font-medium">Archived Issue Publications</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Table Header */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 md:gap-6 p-4 md:px-6 bg-slate-50/50 border-b border-slate-200 font-bold text-slate-800 text-[13px] md:text-[14.5px]">
+      {/* Publications Micro-Compact Table */}
+      <div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden shadow-2xs">
+        {/* Micro-Compact Table Header */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2 py-1.5 px-3 md:px-4 bg-slate-50/90 border-b border-slate-200 font-semibold text-slate-500 text-[10px] uppercase tracking-wider">
           <div>Article Title & Authors</div>
-          <div className="hidden md:block w-[70px] text-center">Page</div>
-          <div className="hidden md:block w-[110px] text-center">Download</div>
+          <div className="hidden md:block w-[50px] text-center">Page</div>
+          <div className="hidden md:block w-[75px] text-center">Download</div>
         </div>
 
         {/* Articles List */}
         <div className="flex flex-col">
-          {currentIssueData.articles.map((article, index) => {
-            const isExpanded = expandedId === article.id;
+          {articles.length === 0 ? (
+            <div className="p-4 text-center text-slate-400 text-[11px] font-normal">
+              No published articles found in this archived issue.
+            </div>
+          ) : (
+            articles.map((article, index) => {
+              const articleKey = article._id || article.id || index;
+              const isExpanded = expandedId === articleKey;
 
-            return (
-              <div
-                key={article.id}
-                className={`group flex flex-col border-b border-slate-100 transition-colors duration-300 ${isExpanded ? "bg-slate-50/50" : "hover:bg-slate-50/50"} ${index === currentIssueData.articles.length - 1 ? "border-b-0" : ""}`}
-              >
-                {/* Main Row */}
+              const doiUrl = article.doi
+                ? article.doi.startsWith("http")
+                  ? article.doi
+                  : `https://doi.org/${article.doi.replace(/^doi:\s*/i, "")}`
+                : "";
+
+              return (
                 <div
-                  className="flex flex-col md:grid md:grid-cols-[1fr_auto_auto] gap-4 md:gap-6 p-4 md:px-6 md:items-center cursor-pointer"
-                  onClick={() => toggleExpand(article.id)}
+                  key={articleKey}
+                  className={`group flex flex-col border-b border-slate-100 transition-colors duration-150 ${
+                    isExpanded ? "bg-slate-50/80" : "hover:bg-slate-50/40"
+                  } ${index === articles.length - 1 ? "border-b-0" : ""}`}
                 >
-                  {/* Title & Authors */}
-                  <div className="flex items-start gap-2.5 md:gap-4 min-w-0">
-                    <div className="shrink-0 mt-0.5 md:mt-1 hidden sm:block">
-                      <div className="w-8 h-8 md:w-10 md:h-10 rounded bg-[#f0f6ff] border border-[#e0edff] flex items-center justify-center text-[#0d6efd] group-hover:scale-105 transition-transform duration-300">
-                        <BsFileEarmarkText className="text-base md:text-xl" />
+                  {/* Main Micro-Compact Row */}
+                  <div
+                    className="flex flex-col md:grid md:grid-cols-[1fr_auto_auto] gap-2 py-1.5 px-3 md:px-4 md:items-center cursor-pointer"
+                    onClick={() => toggleExpand(articleKey)}
+                  >
+                    {/* Title & Authors */}
+                    <div className="flex items-start gap-2 min-w-0">
+                      <div className="shrink-0 mt-0.5 hidden sm:block">
+                        <div className="w-6 h-6 rounded bg-blue-50/80 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform">
+                          <BsFileEarmarkPdf className="text-xs" />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0 pr-0 md:pr-1">
+                        <h3
+                          className={`text-[12px] md:text-[12.5px] font-medium leading-snug mb-0.5 transition-colors ${
+                            isExpanded
+                              ? "text-[#0b1340]"
+                              : "text-[#0d6efd] group-hover:text-[#0b1340]"
+                          }`}
+                        >
+                          {article.title}
+                        </h3>
+                        <p className="text-[10.5px] md:text-[11px] text-slate-500 m-0 break-words whitespace-normal leading-tight font-normal">
+                          {article.authors}
+                        </p>
                       </div>
                     </div>
-                    <div className="flex-1 min-w-0 pr-0 md:pr-2">
-                      <h3
-                        className={`text-[13.5px] md:text-[15.5px] font-bold leading-[1.4] mb-1.5 transition-colors duration-300 break-words whitespace-normal ${isExpanded ? "text-[#0b1340]" : "text-[#0d6efd] group-hover:text-[#0b1340]"}`}
-                      >
-                        {article.title}
-                      </h3>
-                      <p className="text-[12px] md:text-[13.5px] text-slate-500 m-0 break-words whitespace-normal leading-relaxed">
-                        {article.authors}
-                      </p>
+
+                    {/* Mobile & Desktop: Page Range & Download PDF */}
+                    <div className="flex md:contents items-center justify-between mt-0.5 md:mt-0 pt-1.5 md:pt-0 border-t border-slate-100 md:border-0">
+                      {/* Pages */}
+                      <div className="flex items-center gap-1 md:block md:w-[50px] md:text-center text-[11px] text-slate-500 font-normal whitespace-nowrap">
+                        <span className="md:hidden text-slate-400 text-[10px]">Page:</span>
+                        {article.pageRange || article.pages || "01-15"}
+                      </div>
+
+                      {/* Download Button */}
+                      <div className="md:w-[75px] flex justify-end md:justify-center shrink-0">
+                        <button
+                          onClick={(e) => handlePdfClick(e, article.pdfUrl || article.pdfLink)}
+                          className="flex items-center justify-center gap-1 px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-medium rounded border border-blue-200 transition-all cursor-pointer"
+                        >
+                          <FaRegFilePdf className="text-[10px]" />
+                          <span>PDF</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Mobile: Bottom Row for Pages and Download */}
-                  <div className="flex md:contents items-center justify-between mt-1 md:mt-0 pt-3 md:pt-0 border-t border-slate-100/80 md:border-0">
-                    <div className="flex items-center gap-2 md:block md:w-[70px] md:text-center text-[13px] md:text-[14px] text-slate-600 font-medium whitespace-nowrap">
-                      <span className="md:hidden text-slate-400 font-normal">Page:</span>
-                      {article.pages}
-                    </div>
+                  {/* Expandable Abstract & DOI Section */}
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      isExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    <div className="py-2.5 px-3 md:px-4 sm:ml-8 border-t border-slate-100 bg-white space-y-1.5">
+                      <h4 className="font-medium text-slate-800 text-[11px]">Abstract:</h4>
+                      <p className="text-[11px] text-slate-600 leading-relaxed text-justify break-words font-normal">
+                        {article.abstract}
+                      </p>
 
-                    <div className="md:w-[110px] flex justify-end md:justify-center">
-                      <button
-                        onClick={(e) => handlePdfClick(e, article.pdfLink)}
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded bg-[#0d6efd] hover:bg-[#0b5ed7] text-white text-[12px] md:text-[13px] font-medium transition-colors duration-200 shadow-2xs"
-                      >
-                        <FaRegFilePdf className="text-sm" />
-                        <span>PDF</span>
-                      </button>
+                      {/* Bottom Action Footer with Read Full PDF on Left & DOI Link on Bottom Right */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1.5 border-t border-slate-100">
+                        <button
+                          onClick={(e) => handlePdfClick(e, article.pdfUrl || article.pdfLink)}
+                          className="flex items-center gap-1 text-red-600 hover:text-red-700 font-medium text-[11px] transition-colors w-fit cursor-pointer"
+                        >
+                          <VscFilePdf className="text-sm" />
+                          <span className="underline underline-offset-2">Read Full PDF</span>
+                        </button>
+
+                        {/* Bottom Right DOI Link Option */}
+                        {doiUrl ? (
+                          <div className="sm:ml-auto text-right">
+                            <a
+                              href={doiUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-blue-700 hover:text-blue-900 bg-blue-50/80 px-2 py-0.5 rounded border border-blue-100 transition-colors"
+                            >
+                              <span>DOI: {doiUrl.replace(/^https?:\/\/(dx\.)?doi\.org\//i, "")}</span>
+                              <FaExternalLinkAlt className="text-[8px]" />
+                            </a>
+                          </div>
+                        ) : (
+                          <div className="sm:ml-auto text-right text-[9.5px] font-mono text-slate-400 italic">
+                            DOI: Pending Registration
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Abstract Accordion Dropdown */}
-                {isExpanded && (
-                  <div className="px-4 md:px-6 pb-4 pt-1 bg-[#f8fafc] border-t border-slate-100 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    <strong className="text-slate-800 font-bold block mb-1">Abstract:</strong>
-                    <p>{article.abstract}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </div>

@@ -98,24 +98,24 @@ const Navbar = () => {
     >
       {/* Top Header */}
       <div className="container">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-8 pt-4 pb-3 md:py-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-6 py-2.5 md:py-3.5">
           {/* Logo & Title */}
-          <div className="flex items-center justify-between md:justify-start gap-2.5 sm:gap-4 w-full md:w-auto">
+          <div className="flex items-center justify-between md:justify-start gap-3 sm:gap-4 w-full md:w-auto">
             <Link
               to="/"
-              className="flex items-start gap-2.5 sm:gap-4 min-w-0 shrink"
+              className="flex items-center gap-3 sm:gap-3.5 min-w-0 shrink"
             >
               <img
                 src={Logo}
                 alt="IJSSAHR Logo"
-                className="w-[42px] h-[42px] sm:w-[64px] sm:h-[64px] lg:w-[78px] lg:h-[78px] object-contain shrink-0 mt-0.5 md:mt-0 transition-transform duration-300 hover:scale-105"
+                className="w-[48px] h-[48px] sm:w-[64px] sm:h-[64px] lg:w-[74px] lg:h-[74px] object-contain shrink-0 transition-transform duration-200 hover:scale-105"
               />
               <div className="flex flex-col justify-center min-w-0">
                 <h1
                   className="font-bold m-0"
                   style={{
                     color: "var(--primary-dark)",
-                    fontSize: "clamp(13px, 3.8vw, 24px)",
+                    fontSize: "clamp(13px, 2.8vw, 20px)",
                     lineHeight: "1.2",
                   }}
                 >
@@ -123,10 +123,10 @@ const Navbar = () => {
                   Research
                 </h1>
                 <p
-                  className="mt-0.5 md:mt-1 m-0"
+                  className="mt-0.5 m-0 font-normal"
                   style={{
                     color: "var(--text-light)",
-                    fontSize: "clamp(10px, 2.4vw, 14px)",
+                    fontSize: "clamp(10px, 1.8vw, 12px)",
                     lineHeight: "1.3",
                   }}
                 >
@@ -141,7 +141,7 @@ const Navbar = () => {
               onClick={toggleMobileMenu}
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full cursor-pointer shrink-0 transition-all duration-200 active:scale-95"
+              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full cursor-pointer shrink-0 transition-all duration-200 active:scale-95"
               style={{
                 backgroundColor: isMobileMenuOpen
                   ? "var(--primary)"
@@ -154,44 +154,44 @@ const Navbar = () => {
               }}
             >
               {isMobileMenuOpen ? (
-                <FiX style={{ fontSize: "20px" }} />
+                <FiX style={{ fontSize: "16px" }} />
               ) : (
-                <FiMenu style={{ fontSize: "20px" }} />
+                <FiMenu style={{ fontSize: "16px" }} />
               )}
             </button>
           </div>
 
           {/* Right Action Items */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-5 shrink-0">
+          <div className="hidden md:flex items-center gap-3 lg:gap-4 shrink-0">
             <div
-              className="font-semibold flex items-center gap-1.5 shrink-0 whitespace-nowrap"
+              className="font-medium flex items-center gap-1 shrink-0 whitespace-nowrap"
               style={{ color: "var(--heading)", fontSize: "14px" }}
             >
               ISSN&nbsp;:{" "}
-              <span className="font-bold" style={{ color: "var(--primary)" }}>
+              <span className="font-extrabold text-base tracking-wide" style={{ color: "var(--primary)", fontSize: "16px" }}>
                 3139-5805
               </span>
             </div>
 
             <div
-              className="hidden lg:block w-px h-6"
+              className="hidden lg:block w-px h-4"
               style={{ backgroundColor: "var(--border)" }}
             />
 
             {/* Expandable Search Bar */}
             <div
               className="relative shrink-0"
-              style={{ width: "38px", height: "38px" }}
+              style={{ width: "32px", height: "32px" }}
               ref={searchInputRef}
             >
               <motion.form
                 onSubmit={handleSearchSubmit}
                 initial={false}
-                animate={{ width: isSearchOpen ? "240px" : "38px" }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
+                animate={{ width: isSearchOpen ? "210px" : "32px" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 className="absolute right-0 top-0 flex items-center overflow-hidden"
                 style={{
-                  height: "38px",
+                  height: "32px",
                   borderColor: isSearchOpen
                     ? "var(--primary)"
                     : "var(--border)",
@@ -215,12 +215,12 @@ const Navbar = () => {
                   aria-label={isSearchOpen ? "Submit search" : "Open search"}
                   className="flex items-center justify-center shrink-0 cursor-pointer outline-none border-none bg-transparent absolute left-0"
                   style={{
-                    width: "38px",
-                    height: "38px",
+                    width: "32px",
+                    height: "32px",
                     color: isSearchOpen ? "var(--primary)" : "var(--text)",
                   }}
                 >
-                  <FiSearch style={{ fontSize: "17px" }} />
+                  <FiSearch style={{ fontSize: "14px" }} />
                 </button>
                 <AnimatePresence>
                   {isSearchOpen && (
@@ -232,11 +232,11 @@ const Navbar = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search articles..."
-                      className="w-full h-full bg-transparent border-none outline-none pr-3"
+                      className="w-full h-full bg-transparent border-none outline-none pr-2"
                       style={{
                         color: "var(--primary-dark)",
-                        fontSize: "14px",
-                        paddingLeft: "38px",
+                        fontSize: "12px",
+                        paddingLeft: "32px",
                       }}
                       autoFocus
                     />
@@ -247,28 +247,26 @@ const Navbar = () => {
 
             <Link
               to="/submit"
-              className="flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-md shrink-0"
+              className="flex items-center justify-center gap-1.5 transition-all duration-200 shrink-0"
               style={{
                 backgroundColor: "var(--primary)",
                 color: "#ffffff",
-                fontSize: "14px",
-                fontWeight: "600",
-                padding: "10px 18px",
+                fontSize: "12px",
+                fontWeight: "500",
+                padding: "6px 14px",
                 borderRadius: "var(--radius-sm)",
                 whiteSpace: "nowrap",
                 boxShadow: "var(--shadow-sm)",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "var(--primary-hover)";
-                e.currentTarget.style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "var(--primary)";
-                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               <HiOutlineDocumentText
-                style={{ fontSize: "17px", color: "#ffffff" }}
+                style={{ fontSize: "15px", color: "#ffffff" }}
               />
               <span style={{ color: "#ffffff" }}>Submit Manuscript</span>
             </Link>
@@ -287,10 +285,10 @@ const Navbar = () => {
             <div className="flex items-center justify-between w-full">
               <div
                 className="font-semibold flex items-center gap-1.5"
-                style={{ color: "var(--heading)", fontSize: "13px" }}
+                style={{ color: "var(--heading)", fontSize: "14px" }}
               >
                 ISSN&nbsp;:{" "}
-                <span className="font-bold" style={{ color: "var(--primary)" }}>
+                <span className="font-extrabold tracking-wide" style={{ color: "var(--primary)", fontSize: "16px" }}>
                   3139-5805
                 </span>
               </div>
@@ -400,12 +398,12 @@ const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="flex items-center gap-2 font-medium relative text-white"
+                  className="flex items-center gap-1.5 font-normal relative text-white"
                   style={{
-                    fontSize: "13px",
-                    letterSpacing: "0.02em",
-                    paddingTop: "13px",
-                    paddingBottom: "13px",
+                    fontSize: "12px",
+                    letterSpacing: "0.01em",
+                    paddingTop: "7px",
+                    paddingBottom: "7px",
                     opacity: isActive ? 1 : 0.85,
                     transition: "opacity 0.2s ease",
                   }}

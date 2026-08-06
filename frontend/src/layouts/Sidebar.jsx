@@ -11,72 +11,94 @@ import {
 } from "react-icons/bi";
 import { BsPeople } from "react-icons/bs";
 import { HiOutlineDocumentText } from "react-icons/hi";
-import { FiChevronDown, FiChevronUp, FiList } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiList, FiBookmark } from "react-icons/fi";
 import fallbackCopyrightPdf from "../assets/images/Copyright-form IJSSAHR.pdf";
+import { formatFileUrl } from "../utils/fileUrl";
+import API from "../services/api";
+
+import { useQuery } from "@tanstack/react-query";
 
 const Sidebar = () => {
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isIndexingOpen, setIsIndexingOpen] = useState(false);
 
-  // Backend ready configuration for dynamic document URLs
-  // Replace fallbackCopyrightPdf with backend API URL (e.g. response.data.copyrightPdfUrl) when backend is connected
-  const [sidebarData, setSidebarData] = useState({
-    copyrightPdfUrl: fallbackCopyrightPdf,
+  const { data: copyrightPdfUrl = fallbackCopyrightPdf } = useQuery({
+    queryKey: ["sidebar-copyright-pdf"],
+    queryFn: async () => {
+      const res = await API.get("/payment-info");
+      const livePdfUrl = res.data?.data?.copyrightForm?.pdfUrl;
+      if (livePdfUrl) {
+        return formatFileUrl(livePdfUrl);
+      }
+      return fallbackCopyrightPdf;
+    },
+    staleTime: 0,
+    refetchOnMount: true,
   });
+
+  const { data: indexingServices = [] } = useQuery({
+    queryKey: ["sidebar-indexing-services"],
+    queryFn: async () => {
+      const res = await API.get("/indexing-services");
+      return res.data?.data || [];
+    },
+    staleTime: 0,
+    refetchOnMount: true,
+  });
+
+  const sidebarData = { copyrightPdfUrl };
 
   const menuItems = [
     {
       path: "/current-issue",
       label: "Current Issue",
-      icon: <AiOutlineHome className="text-[20px]" />,
+      icon: <AiOutlineHome className="text-[15px]" />,
     },
     {
       path: "/archive",
       label: "Archive",
-      icon: <BiArchive className="text-[20px]" />,
+      icon: <BiArchive className="text-[15px]" />,
     },
     {
       path: "/editorial-board",
       label: "Editorial Board",
-      icon: <BsPeople className="text-[20px]" />,
+      icon: <BsPeople className="text-[15px]" />,
     },
     {
       path: "/instructions",
       label: "Instructions for Authors",
-      icon: <HiOutlineDocumentText className="text-[20px]" />,
+      icon: <HiOutlineDocumentText className="text-[15px]" />,
     },
     {
       path: "/aim-scope",
       label: "Aim & Scope",
-      icon: <BiTargetLock className="text-[20px]" />,
+      icon: <BiTargetLock className="text-[15px]" />,
     },
     {
       path: "/payment",
       label: "Mode of Payment",
-      icon: <BiCreditCard className="text-[20px]" />,
+      icon: <BiCreditCard className="text-[15px]" />,
     },
-
     {
       path: "/copyright",
       label: "Copyright Form",
-      icon: <BiCopyright className="text-[20px]" />,
+      icon: <BiCopyright className="text-[15px]" />,
       isExternal: true,
       externalUrl: sidebarData.copyrightPdfUrl,
     },
     {
       path: "/contact",
       label: "Contact Us",
-      icon: <BiEnvelope className="text-[20px]" />,
+      icon: <BiEnvelope className="text-[15px]" />,
     },
     {
       path: "/indexing",
       label: "Indexing",
-      icon: <BiBarChart className="text-[20px]" />,
+      icon: <BiBarChart className="text-[15px]" />,
     },
   ];
 
-  // Dummy data for future backend integration
   const dummyIndexingServices = [
     { id: 1, name: "Index Copernicus", link: "/index-copernicus" },
     { id: 2, name: "Scientific Indexing Services", link: "/scientific-indexing-services" },
@@ -86,170 +108,113 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden w-full transition-all">
-      {/* Mobile Accordion Header */}
-      <button
-        onClick={() => setIsMobileOpen((prev) => !prev)}
-        className="md:hidden w-full flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200/60 font-semibold text-[14px] text-[var(--primary-dark)]"
-      >
-        <div className="flex items-center gap-2">
-          <FiList className="text-[var(--primary)] text-lg" />
-          <span>Journal Menu</span>
+    <div className="flex flex-col gap-4 w-full text-slate-800">
+      {/* Journal Menu Box */}
+      <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden w-full transition-all">
+        {/* Header */}
+        <div className="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200/80 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FiList className="text-blue-600 text-sm" />
+            <span className="text-[11.5px] font-bold uppercase tracking-wider text-slate-800">
+              Journal Navigation
+            </span>
+          </div>
+          <button
+            onClick={() => setIsMobileOpen((prev) => !prev)}
+            className="md:hidden text-slate-500 hover:text-slate-800"
+          >
+            {isMobileOpen ? <FiChevronUp /> : <FiChevronDown />}
+          </button>
         </div>
-        {isMobileOpen ? (
-          <FiChevronUp className="text-slate-500 text-lg" />
-        ) : (
-          <FiChevronDown className="text-slate-500 text-lg" />
-        )}
-      </button>
 
-      {/* Navigation Menu List */}
-      <nav
-        className={`flex flex-col ${isMobileOpen ? "flex" : "hidden md:flex"}`}
-      >
-        {menuItems.map((item, index) => {
-          const isActive =
-            location.pathname === item.path ||
-            (location.pathname === "/" && item.path === "/current-issue");
-          const isLast = index === menuItems.length - 1;
+        {/* Navigation Menu List */}
+        <nav
+          className={`p-1.5 flex-col gap-0.5 ${
+            isMobileOpen ? "flex" : "hidden md:flex"
+          }`}
+        >
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
 
-          if (item.isExternal) {
+            if (item.isExternal) {
+              return (
+                <a
+                  key={item.label}
+                  href={item.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12.5px] font-semibold transition-all duration-150 text-slate-700 hover:text-blue-600 hover:bg-slate-50"
+                >
+                  <div className="flex items-center justify-center shrink-0 text-slate-400 group-hover:text-blue-600">
+                    {item.icon}
+                  </div>
+                  <span className="leading-tight font-semibold">
+                    {item.label}
+                  </span>
+                </a>
+              );
+            }
+
             return (
-              <a
-                key={item.label}
-                href={item.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                key={item.path}
+                to={item.path}
                 onClick={() => setIsMobileOpen(false)}
-                className={`flex items-center gap-3.5 px-5 py-3.5 transition-all duration-150 border-l-4 ${
-                  isLast ? "" : "border-b border-slate-100"
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12.5px] font-semibold transition-all duration-150 ${
+                  isActive
+                    ? "bg-blue-600 text-white shadow-xs"
+                    : "text-slate-700 hover:text-blue-600 hover:bg-slate-50"
                 }`}
-                style={{
-                  borderLeftColor: "transparent",
-                  backgroundColor: "transparent",
-                  color: "var(--heading)",
-                  fontWeight: "500",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f8fafc";
-                  e.currentTarget.style.color = "var(--primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--heading)";
-                }}
               >
                 <div
-                  className="flex items-center justify-center shrink-0"
-                  style={{ color: "var(--text-light)" }}
+                  className={`flex items-center justify-center shrink-0 ${
+                    isActive ? "text-white" : "text-slate-400"
+                  }`}
                 >
                   {item.icon}
                 </div>
-                <span className="text-[14px] md:text-[14.5px] leading-snug font-medium">
-                  {item.label}
-                </span>
-              </a>
-            );
-          }
-
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={() => setIsMobileOpen(false)}
-              className={`flex items-center gap-3.5 px-5 py-3.5 transition-all duration-150 border-l-4 ${
-                isLast ? "" : "border-b border-slate-100"
-              }`}
-              style={{
-                borderLeftColor: isActive ? "var(--primary)" : "transparent",
-                backgroundColor: isActive
-                  ? "var(--primary-light)"
-                  : "transparent",
-                color: isActive ? "var(--primary)" : "var(--heading)",
-                fontWeight: isActive ? "600" : "500",
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = "#f8fafc";
-                  e.currentTarget.style.color = "var(--primary)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--heading)";
-                }
-              }}
-            >
-              <div
-                className="flex items-center justify-center shrink-0"
-                style={{
-                  color: isActive ? "var(--primary)" : "var(--text-light)",
-                }}
-              >
-                {item.icon}
-              </div>
-              <span className="text-[14px] md:text-[14.5px] leading-snug font-medium">
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
-      </nav>
-      </div>
-
-      {/* Dynamic Indexing Services Box */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden w-full transition-all">
-        {/* Mobile Accordion Header for Indexing */}
-        <button
-          onClick={() => setIsIndexingOpen((prev) => !prev)}
-          className="md:hidden w-full flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200/60 font-semibold text-[14px] text-[var(--primary-dark)]"
-        >
-          <div className="flex items-center gap-2">
-            <BiBarChart className="text-[var(--primary)] text-lg" />
-            <span>Indexing Services</span>
-          </div>
-          {isIndexingOpen ? (
-            <FiChevronUp className="text-slate-500 text-lg" />
-          ) : (
-            <FiChevronDown className="text-slate-500 text-lg" />
-          )}
-        </button>
-
-        <div className={`flex-col ${isIndexingOpen ? "flex" : "hidden md:flex"}`}>
-          {dummyIndexingServices.map((service, index) => {
-            const isLast = index === dummyIndexingServices.length - 1;
-            return (
-              <a
-                key={service.id}
-                href={service.link}
-                target="_blank"
-                rel="noreferrer"
-                className={`flex items-center gap-3.5 px-5 py-3.5 transition-all duration-150 border-l-4 ${
-                  isLast ? "" : "border-b border-slate-100"
-                }`}
-                style={{
-                  borderLeftColor: "transparent",
-                  backgroundColor: "transparent",
-                  color: "var(--heading)",
-                  fontWeight: "500",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f8fafc";
-                  e.currentTarget.style.color = "var(--primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--heading)";
-                }}
-              >
-                <span className="text-[14px] md:text-[14.5px] leading-snug font-medium">
-                  {service.name}
-                </span>
-              </a>
+                <span className="leading-tight">{item.label}</span>
+              </Link>
             );
           })}
+        </nav>
+      </div>
+
+      {/* Indexing Services Box */}
+      <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs overflow-hidden w-full transition-all">
+        <div className="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-200/80 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FiBookmark className="text-blue-600 text-sm" />
+            <span className="text-[11.5px] font-bold uppercase tracking-wider text-slate-800">
+              Indexing Services
+            </span>
+          </div>
+          <button
+            onClick={() => setIsIndexingOpen((prev) => !prev)}
+            className="md:hidden text-slate-500 hover:text-slate-800"
+          >
+            {isIndexingOpen ? <FiChevronUp /> : <FiChevronDown />}
+          </button>
+        </div>
+
+        <div
+          className={`p-1.5 flex-col gap-0.5 ${
+            isIndexingOpen ? "flex" : "hidden md:flex"
+          }`}
+        >
+          {indexingServices.map((service, index) => (
+            <a
+              key={index}
+              href={service.url || "#"}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-all"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0"></span>
+              <span className="leading-tight">{service.name}</span>
+            </a>
+          ))}
         </div>
       </div>
     </div>

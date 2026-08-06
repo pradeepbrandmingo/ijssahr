@@ -1,88 +1,110 @@
-import React from 'react';
-import { BiCalendar, BiBookOpen } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
-import { FiChevronRight } from 'react-icons/fi';
+import React from "react";
+import { BiCalendar, BiBookOpen } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import { FiChevronRight } from "react-icons/fi";
+import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import API from "../../services/api";
 
 const ArchiveContent = () => {
   const navigate = useNavigate();
 
-  // Dummy data representing the list of past issues from the backend
-  const pastIssues = [
-    {
-      id: "vol-01-iss-03",
-      volume: "Volume 01",
-      issue: "Issue 03",
-      date: "May–Jun 2026",
+  const { data: pastIssues = [], isLoading } = useQuery({
+    queryKey: ["archive-issues-public"],
+    queryFn: async () => {
+      const res = await API.get("/issues/archive");
+      return res.data?.data || [];
     },
-    {
-      id: "vol-01-iss-02",
-      volume: "Volume 01",
-      issue: "Issue 02",
-      date: "Mar–Apr 2026",
-    },
-    {
-      id: "vol-01-iss-01",
-      volume: "Volume 01",
-      issue: "Issue 01",
-      date: "Jan–Feb 2026",
-    }
-  ];
+    staleTime: 1000 * 60 * 5,
+  });
 
   const handleIssueClick = (issueId) => {
-    // Navigate to the dynamic route for the specific issue
-    // For now, this will just log or attempt to navigate. In future, create /archive/:issueId route
     navigate(`/archive/${issueId}`);
   };
 
   return (
-    <div className="w-full animate-fade-in">
-      
-      {/* Archive Header */}
-      <div className="mb-5 md:mb-8">
-        <h1 className="text-[22px] md:text-[28px] font-bold text-[#0b1340] mb-1.5 md:mb-2">Archive</h1>
-        <p className="text-slate-600 text-[13.5px] md:text-[15px]">Browse and access all past issues of IJSSAHR.</p>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="w-full space-y-3"
+    >
+      {/* Micro-Compact Archive Header */}
+      <div>
+        <h1 className="text-lg md:text-xl font-bold text-[#0b1340] mb-0.5">Archive</h1>
+        <p className="text-slate-500 text-xs font-normal">
+          Browse and access all past issues of IJSSAHR.
+        </p>
       </div>
 
-      {/* Issues List */}
-      <div className="w-full bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-slate-100 overflow-hidden">
-        <div className="flex flex-col">
-          {pastIssues.map((issue, index) => (
-            <div 
-              key={issue.id}
-              onClick={() => handleIssueClick(issue.id)}
-              className={`group flex items-center justify-between p-4 md:p-6 bg-white cursor-pointer transition-all duration-300 hover:bg-[#f8fbff] ${index === pastIssues.length - 1 ? '' : 'border-b border-slate-100'}`}
-            >
-              <div className="flex items-center gap-3 sm:gap-4 md:gap-6 min-w-0">
-                
-                {/* Icon Badge */}
-                <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-[#f0f6ff] group-hover:bg-[#0d6efd] flex items-center justify-center text-[#0d6efd] group-hover:text-white transition-colors duration-300">
-                  <BiBookOpen className="text-2xl md:text-[28px]" />
-                </div>
-
-                {/* Info */}
-                <div className="min-w-0 pr-2">
-                  <h3 className="text-[#0d6efd] group-hover:text-[#0b1340] font-bold text-[14px] sm:text-[15px] md:text-[17px] mb-1 md:mb-1.5 transition-colors duration-300 truncate">
-                    {issue.volume}, {issue.issue}
-                  </h3>
-                  <div className="flex items-center gap-1.5 md:gap-2 text-slate-500 text-[12px] sm:text-[13px] md:text-[14px]">
-                    <BiCalendar className="text-[14px] md:text-[16px] shrink-0" />
-                    <span className="truncate">{issue.date}</span>
+      {/* Issues List Container */}
+      <div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden shadow-2xs">
+        {isLoading ? (
+          /* Smooth Skeleton Rows (Same height as real data items) */
+          <div className="flex flex-col divide-y divide-slate-100">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="py-2.5 px-3 md:px-4 flex items-center justify-between animate-pulse">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 shrink-0"></div>
+                  <div className="space-y-1.5 flex-1 max-w-sm">
+                    <div className="h-3 bg-slate-100 rounded w-2/3"></div>
+                    <div className="h-2.5 bg-slate-50 rounded w-1/3"></div>
                   </div>
                 </div>
+                <div className="h-6 w-16 bg-slate-100 rounded shrink-0 hidden sm:block"></div>
               </div>
+            ))}
+          </div>
+        ) : pastIssues.length === 0 ? (
+          <div className="p-6 text-center text-slate-400 text-xs font-normal">
+            No past archived issues recorded yet.
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="flex flex-col"
+          >
+            {pastIssues.map((issue, index) => (
+              <div
+                key={issue._id || issue.id}
+                onClick={() => handleIssueClick(issue._id || issue.id)}
+                className={`group flex items-center justify-between py-2 px-3 md:px-4 bg-white cursor-pointer transition-colors duration-150 hover:bg-slate-50/70 ${
+                  index === pastIssues.length - 1 ? "" : "border-b border-slate-100"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {/* Compact Icon Badge */}
+                  <div className="shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 group-hover:bg-blue-600 flex items-center justify-center text-blue-600 group-hover:text-white transition-colors duration-200">
+                    <BiBookOpen className="text-sm sm:text-base" />
+                  </div>
 
-              {/* Action Button */}
-              <div className="flex items-center gap-3 md:gap-4 shrink-0">
-                <button className="hidden sm:block px-3 py-1.5 md:px-4 md:py-2 bg-white border border-slate-200 text-slate-600 text-[12px] md:text-[13px] font-semibold rounded hover:border-[#0d6efd] hover:text-[#0d6efd] transition-colors duration-300">
-                  View Issue
-                </button>
-                <FiChevronRight className="text-slate-400 text-lg md:text-xl group-hover:text-[#0d6efd] transition-colors duration-300" />
+                  {/* Info */}
+                  <div className="min-w-0 pr-2">
+                    <h3 className="text-[#0d6efd] group-hover:text-[#0b1340] font-medium text-xs sm:text-[13px] md:text-[13.5px] transition-colors truncate">
+                      {issue.volume}, {issue.issue} ({issue.period || "2026"})
+                    </h3>
+                    <div className="flex items-center gap-1 text-slate-400 text-[10.5px] font-normal">
+                      <BiCalendar className="text-xs shrink-0" />
+                      <span className="truncate">{issue.period || issue.date}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Compact Action Button */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <button className="hidden sm:block px-2.5 py-1 bg-white border border-slate-200 text-slate-600 text-[11px] font-medium rounded hover:border-blue-600 hover:text-blue-600 transition-colors cursor-pointer">
+                    View Issue
+                  </button>
+                  <FiChevronRight className="text-slate-400 text-sm group-hover:text-blue-600 transition-colors" />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </motion.div>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
